@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Pull Docker image
-        run: sudo docker pull ${{ secrets.DOCKER_USERNAME }}/cicd-pipeline:latest
+        run: sudo docker pull shanuka9817/cicd-pipeline:latest
       - name: Delete Old Docker image
         run: sudo docker rm -f cicd-pipeline-container || true
       - name: Run Docker Container
