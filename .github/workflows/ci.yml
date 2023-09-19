@@ -19,4 +19,4 @@ jobs:
       - name: Build the Docker image
         run: docker build -t cicd-pipeline .
       - name: Push to Dockerhub
-        run: docker push shanuka9817/cicd-pipeline:tagname
+        run: docker push ${{secrets.DOCKER_USERNAME}}/cicd-pipeline:tagname
