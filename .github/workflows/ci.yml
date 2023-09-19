@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: CI Pipeline
 
 on:
   push:
@@ -6,12 +6,19 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Pull Docker image
-        run: sudo docker pull ${{ secrets.DOCKER_USERNAME }}/cicd-pipeline:lattest
-      - name: Delete Old Docker image
-        run: sudo docker rm -f tagname || true
-      - name: Run Docker Container
-        run: sudo docker run -d -p 8080:8080 --name tagname ${{ secrets.DOCKER_USERNAME }}/cicd-pipeline
+      - uses: actions/checkout@v3
+      - name: Login Dockerhub
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+      - name: Build the Docker image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/cicd-pipeline .
+
+      - name: Push to Dockerhub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/cicd-pipeline:latest
